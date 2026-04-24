@@ -1,54 +1,49 @@
-# AI Chef System 👨‍🍳
+# ChefAI 👨‍🍳
 
-## Description
-AI system that takes user ingredients and guides them step-by-step to a meal decision using a conversational chef.
+An AI chef system that guides users step-by-step to a meal using their available ingredients.
 
-## Features
-- Ingredient understanding
-- Step-by-step cooking guidance
-- Memory (conversation context)
-- Adjustable creativity (temperature)
-- Response length control (max tokens)
-- Multiple modes (concise / detailed)
+## Architecture
 
-## Tech Stack
-- Backend: FastAPI (Python)
-- Frontend: React
-- AI Model: OpenAI API
+```
+frontend (React)  →  backend (FastAPI)  →  OpenAI GPT-4o
+     ↓                     ↓
+  useChef hook         ChefAI class
+  (MemorySync)      (Abstraction Layer)
+```
 
-## Concepts Implemented
+## Key Concepts Implemented
 
-### Endpoints
-/chef endpoint handles user interaction.
+| Concept | Where |
+|---|---|
+| **Endpoints** | `main.py` — `/chat`, `/reset`, `/config`, `/history/:id` |
+| **Abstraction / loose coupling** | `ChefAI` class wraps OpenAI; frontend only talks to REST API |
+| **Temperature** | Configurable: `strict=0.3`, `balanced=0.7`, `creative=1.0` |
+| **Max tokens** | Configurable via `ChefConfig.max_tokens` |
+| **Memory** | `ConversationMemory` class stores full message history |
+| **MemorySync** | `useChef` hook keeps frontend state in sync with backend session |
+| **System prompt** | `build_system_prompt()` dynamically builds persona from config |
 
-### Abstraction
-Frontend, backend, and AI model are separated.
-
-### Temperature
-Controls creativity of responses.
-
-### Max Tokens
-Limits response size.
-
-### System Prompt
-Defines chef personality and behavior.
-
-### Memory
-Conversation history stored per user.
-
-### Memory vs Stateless
-System maintains context across requests.
-
-## How to Run
+## Setup
 
 ### Backend
+```bash
+cd backend
 pip install -r requirements.txt
+cp .env.example .env      # add your OPENAI_API_KEY
 uvicorn main:app --reload
+```
 
 ### Frontend
+```bash
+cd frontend
 npm install
 npm start
+```
 
-## Notes
-- Memory resets when server restarts
-- Designed for educational purposes
+## Usage
+
+1. Open `http://localhost:3000`
+2. Tell Chef Marco what ingredients you have
+3. He'll guide you step-by-step to a meal decision
+4. Use ⚙️ Settings to adjust creativity and response style
+5. Use 🔄 New Session to start fresh
